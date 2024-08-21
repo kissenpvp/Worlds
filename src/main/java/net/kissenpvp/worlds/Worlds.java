@@ -29,6 +29,10 @@ public final class Worlds extends JavaPlugin
         pluginManager.registerCommand(this, new WorldCommand());
         pluginManager.registerParser(World.class, new WorldCommand(), this);
 
+        pluginManager.registerTranslation("world.load.successful", new MessageFormat("The world {0} has been loaded successfully."), this);
+
+        pluginManager.registerTranslation("command.create.starting", new MessageFormat("The world {0} will now get created."), this);
+
         pluginManager.registerTranslation("command.world.unknown", new MessageFormat("The world {0} seems to not exist or is not loaded, check /bmv help for help."), this);
         pluginManager.registerTranslation("command.players.inside", new MessageFormat("The world you are trying to operate still contains players. Make sure they are in another world."), this);
 

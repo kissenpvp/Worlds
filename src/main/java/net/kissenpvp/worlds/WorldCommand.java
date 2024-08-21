@@ -32,7 +32,7 @@ public class WorldCommand implements ArgumentParser<World> {
     @CommandData(value = "world.create", description = "Creates a new world.")
     public void createWorld(@NotNull CommandPayload<CommandSender> payload, @NotNull @ArgumentName("name") String name) {
         WorldCreator newWorldCreator = new WorldCreator(name);
-        payload.getSender().sendMessage(Component.translatable("world.create.starting", Component.text(name)));
+        payload.getSender().sendMessage(Component.translatable("command.create.starting", Component.text(name)));
 
         newWorldCreator.createWorld();
         payload.getSender().sendMessage(Component.translatable("world.load.successful", Component.text(name)));
