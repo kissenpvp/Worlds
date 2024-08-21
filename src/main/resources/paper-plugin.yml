@@ -1,0 +1,5 @@
+name: Worlds
+version: '1.0.0-SNAPSHOT'
+main: net.kissenpvp.worlds.Worlds
+author: DevLucas
+api-version: '1.21'
