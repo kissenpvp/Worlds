@@ -44,9 +44,7 @@ public final class Worlds extends JavaPlugin
         pluginManager.registerTranslation("command.delete.confirmation", new MessageFormat("Are you sure you want to delete the world {0}. It wont be recoverable. If you are sure type /confirm otherwise type /cancel. This request will automatically expire after 30 seconds."), this);
         pluginManager.registerTranslation("command.delete.successful", new MessageFormat("The world {0} has been deleted successfully."), this);
 
-        DatabaseImplementation databaseConnection = Bukkit.getPulvinar().getImplementation(DatabaseImplementation.class);
-        DatabaseConnection connect = databaseConnection.getConnection("private").orElseGet(databaseConnection::getPrimaryConnection);
-        Table table = connect.createTable("worlds");
+        Table table = Bukkit.getPulvinar().getPrivateDatabase().createTable("worlds");
         worldList = table.registerMeta(this).getCollection("worlds", String.class).join();
 
         // Load worlds
