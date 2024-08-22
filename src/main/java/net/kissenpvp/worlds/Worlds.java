@@ -1,22 +1,26 @@
 package net.kissenpvp.worlds;
 
-import net.kissenpvp.core.api.database.connection.DatabaseConnection;
-import net.kissenpvp.core.api.database.connection.DatabaseImplementation;
 import net.kissenpvp.core.api.database.meta.Table;
 import net.kissenpvp.core.api.database.meta.list.MetaList;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.generator.WorldInfo;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class Worlds extends JavaPlugin
 {
-
     private MetaList<String> worldList;
 
     public @NotNull MetaList<String> getWorldList() {
@@ -47,12 +51,29 @@ public final class Worlds extends JavaPlugin
         Table table = Bukkit.getPulvinar().getPrivateDatabase().createTable("worlds");
         worldList = table.registerMeta(this).getCollection("worlds", String.class).join();
 
-        // Load worlds
+        loadWorlds();
+    }
+
+    private void loadWorlds()
+    {
+        List<String> unrecognizedWorlds = getLoadedWorlds().stream().filter(world -> worldList.contains(world)).toList();
+        if(!unrecognizedWorlds.isEmpty())
+        {
+            String warning = "The worlds %s have not been saved to the database. Adding them now...";
+            getLogger().warning(String.format(warning, unrecognizedWorlds));
+            worldList.addAll(unrecognizedWorlds);
+        }
+
         worldList.forEach(world -> {
             if(Objects.isNull(Bukkit.getWorld(world)))
             {
                 new WorldCreator(world).createWorld();
             }
         });
+    }
+
+    private @NotNull @Unmodifiable Set<String> getLoadedWorlds()
+    {
+        return Bukkit.getWorlds().stream().map(WorldInfo::getName).collect(Collectors.toUnmodifiableSet());
     }
 }
